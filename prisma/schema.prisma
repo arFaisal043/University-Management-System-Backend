@@ -1,0 +1,84 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  INSTRUCTOR
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      Role
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  student   Student?
+  instructor Instructor?
+  admin     Admin?
+}
+
+model Student {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id])
+  name         String
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id])
+}
+
+model Instructor {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id])
+  name         String
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id])
+}
+
+model Admin {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  name      String
+}
+
+model Department {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  students    Student[]
+  instructors Instructor[]
+  programs    Program[]
+}
+
+model Program {
+  id           String   @id @default(uuid())
+  name         String   @unique
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id])
+  courses      Course[]
+}
+
+model Course {
+  id          String   @id @default(uuid())
+  name        String
+  code        String   @unique
+  programId   String
+  program     Program  @relation(fields: [programId], references: [id])
+  registrations CourseRegistration[]
+}
+
+model CourseRegistration {
+  id        String   @id @default(uuid())
+  studentId String
+  courseId  String
+  course    Course   @relation(fields: [courseId], references: [id])
+}
