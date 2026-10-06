@@ -60,9 +60,32 @@ Base URL: `/api/v1`
   }
   ```
 
-### 1.2 User Login
+### 1.2 User Registration
+- **Route:** `POST /auth/register`
+- **Description:** Registers a new user. Similar to create user but publicly accessible.
+- **Request Body:**
+  ```json
+  {
+    "email": "student@example.com",
+    "password": "securepassword",
+    "role": "STUDENT",
+    "name": "John Doe",
+    "departmentId": "uuid-optional"
+  }
+  ```
+- **Response (201 Created):**
+  ```json
+  {
+    "success": true,
+    "statusCode": 201,
+    "message": "User registered successfully",
+    "data": { ... }
+  }
+  ```
+
+### 1.3 User Login
 - **Route:** `POST /auth/login`
-- **Description:** Authenticates a user and issues a JWT access token.
+- **Description:** Authenticates a user and issues a JWT access token and refresh token.
 - **Request Body:**
   ```json
   {
@@ -76,6 +99,24 @@ Base URL: `/api/v1`
     "success": true,
     "statusCode": 200,
     "message": "User logged in successfully",
+    "data": {
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    }
+  }
+  ```
+  *Note: `refreshToken` is set as an HTTP-only cookie.*
+
+### 1.4 Refresh Token
+- **Route:** `POST /auth/refresh-token`
+- **Description:** Retrieves a new access token using a refresh token from cookies.
+- **Request (Cookies):**
+  `refreshToken=eyJhbGci...`
+- **Response (200 OK):**
+  ```json
+  {
+    "success": true,
+    "statusCode": 200,
+    "message": "Access token retrieved successfully",
     "data": {
       "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     }
