@@ -27,7 +27,7 @@ const loginUser = async (payload: any) => {
   };
 
   const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
-    expiresIn: config.jwt_access_expires_in,
+    expiresIn: config.jwt_access_expires_in as any,
   });
 
   return {
