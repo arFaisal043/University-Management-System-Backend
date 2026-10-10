@@ -29,16 +29,6 @@ A robust, scalable, and secure RESTful API built for managing university operati
 
 ---
 
-## 📋 Prerequisites
-
-Before you begin, ensure you have met the following requirements:
-* Node.js installed (v18 or higher recommended)
-* A running instance of PostgreSQL
-* A Stripe Developer Account (for Webhooks and Payments)
-* A Google Cloud Console project (for OAuth Client ID)
-
----
-
 ## ⚙️ Installation & Setup
 
 1. **Clone the repository:**
@@ -105,7 +95,3 @@ The complete API documentation, including request payloads and response structur
 - **Graceful Error Handling:** A global error handler catches and cleanly formats all exceptions, including Zod validation errors, Prisma constraint violations, and custom `AppError` throws.
 - **Secure Webhooks:** Express raw body parsing is selectively applied only to the Stripe webhook route to ensure signature verification passes flawlessly.
 - **Scalable Schema Design:** The Prisma schema is broken down into modular files (`academic.prisma`, `finance.prisma`, etc.) utilizing Prisma's latest `prismaSchemaFolder` feature.
-
----
-
-> Built for the Backend Engineering Mastery program.
