@@ -4,6 +4,8 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from '../../config';
 import AppError from '../../errors/AppError';
 import { UserService } from '../user/user.service';
+import { OAuth2Client } from 'google-auth-library';
+import crypto from 'crypto';
 
 const prisma = new PrismaClient();
 
@@ -81,8 +83,54 @@ const refreshToken = async (token: string) => {
   };
 };
 
+const socialLogin = async (payload: { idToken: string }) => {
+  const googleClient = new OAuth2Client(config.google_client_id);
+  
+  const ticket = await googleClient.verifyIdToken({
+    idToken: payload.idToken,
+    audience: config.google_client_id,
+  });
+  const googlePayload = ticket.getPayload();
+  if (!googlePayload || !googlePayload.email) throw new AppError(401, 'Invalid Google Token');
+
+  const { email, name } = googlePayload;
+
+  let user = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (!user) {
+    const randomPassword = crypto.randomBytes(16).toString('hex');
+    user = await UserService.createUser({
+      email,
+      password: randomPassword,
+      name: name || 'Google User',
+      role: 'STUDENT',
+    }) as any;
+  }
+
+  const jwtPayload = {
+    email: user.email,
+    role: user.role,
+  };
+
+  const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
+    expiresIn: config.jwt_access_expires_in as any,
+  });
+
+  const refreshToken = jwt.sign(jwtPayload, config.jwt_refresh_secret as string, {
+    expiresIn: config.jwt_refresh_expires_in as any,
+  });
+
+  return {
+    accessToken,
+    refreshToken,
+  };
+};
+
 export const AuthService = {
   registerUser,
   loginUser,
   refreshToken,
+  socialLogin,
 };

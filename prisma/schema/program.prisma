@@ -1,0 +1,7 @@
+model Program {
+  id           String     @id @default(uuid())
+  name         String     @unique
+  departmentId String
+  department   Department @relation(fields: [departmentId], references: [id])
+  courses      Course[]
+}

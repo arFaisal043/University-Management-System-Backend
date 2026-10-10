@@ -10,7 +10,13 @@ const app: Application = express();
 
 app.use(helmet());
 app.use(cors());
-app.use(express.json());
+app.use(express.json({
+  verify: (req: any, res, buf) => {
+    if (req.originalUrl.startsWith('/api/v1/payments/webhook')) {
+      req.rawBody = buf.toString();
+    }
+  }
+}));
 app.use(cookieParser());
 
 app.use('/api/v1', router);

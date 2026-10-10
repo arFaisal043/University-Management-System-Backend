@@ -1,0 +1,20 @@
+model Course {
+  id        String  @id @default(uuid())
+  name      String
+  code      String  @unique
+  programId String
+  program   Program @relation(fields: [programId], references: [id])
+
+  sections        Section[]
+  prerequisites   CoursePrerequisite[] @relation("CourseToPrerequisite")
+  prerequisiteFor CoursePrerequisite[] @relation("PrerequisiteToCourse")
+}
+
+model CoursePrerequisite {
+  courseId       String
+  prerequisiteId String
+  course         Course @relation("CourseToPrerequisite", fields: [courseId], references: [id])
+  prerequisite   Course @relation("PrerequisiteToCourse", fields: [prerequisiteId], references: [id])
+
+  @@id([courseId, prerequisiteId])
+}

@@ -1,0 +1,29 @@
+enum FeeStatus {
+  UNPAID
+  PAID
+  CANCELLED
+}
+
+model Fee {
+  id         String           @id @default(uuid())
+  studentId  String
+  student    Student          @relation(fields: [studentId], references: [id])
+  semesterId String
+  semester   AcademicSemester @relation(fields: [semesterId], references: [id])
+  amount     Float
+  status     FeeStatus        @default(UNPAID)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  payment Payment?
+}
+
+model Payment {
+  id             String   @id @default(uuid())
+  feeId          String   @unique
+  fee            Fee      @relation(fields: [feeId], references: [id])
+  transactionId  String?  @unique
+  paymentGateway String // e.g., 'STRIPE'
+  amount         Float
+  createdAt      DateTime @default(now())
+}

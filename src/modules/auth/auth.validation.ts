@@ -22,3 +22,9 @@ export const refreshTokenValidationSchema = z.object({
     refreshToken: z.string(),
   }),
 });
+
+export const socialLoginValidationSchema = z.object({
+  body: z.object({
+    idToken: z.string(),
+  }),
+});

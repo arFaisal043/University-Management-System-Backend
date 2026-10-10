@@ -1,0 +1,41 @@
+model AcademicSemester {
+  id        String   @id @default(uuid())
+  name      String // e.g., "Spring 2026"
+  year      Int
+  startDate DateTime
+  endDate   DateTime
+
+  sections Section[]
+  fees     Fee[]
+}
+
+model Section {
+  id           String           @id @default(uuid())
+  name         String // e.g., "A", "B"
+  courseId     String
+  course       Course           @relation(fields: [courseId], references: [id])
+  instructorId String
+  instructor   Instructor       @relation(fields: [instructorId], references: [id])
+  semesterId   String
+  semester     AcademicSemester @relation(fields: [semesterId], references: [id])
+
+  courseRegistrations CourseRegistration[]
+  attendances         Attendance[]
+  exams               Exam[]
+}
+
+enum RegistrationStatus {
+  ENROLLED
+  DROPPED
+  COMPLETED
+}
+
+model CourseRegistration {
+  id        String             @id @default(uuid())
+  studentId String
+  student   Student            @relation(fields: [studentId], references: [id])
+  sectionId String
+  section   Section            @relation(fields: [sectionId], references: [id])
+  status    RegistrationStatus @default(ENROLLED)
+  createdAt DateTime           @default(now())
+}

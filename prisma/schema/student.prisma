@@ -1,0 +1,13 @@
+model Student {
+  id           String      @id @default(uuid())
+  userId       String      @unique
+  user         User        @relation(fields: [userId], references: [id])
+  name         String
+  departmentId String?
+  department   Department? @relation(fields: [departmentId], references: [id])
+
+  courseRegistrations CourseRegistration[]
+  fees                Fee[]
+  attendances         Attendance[]
+  results             Result[]
+}

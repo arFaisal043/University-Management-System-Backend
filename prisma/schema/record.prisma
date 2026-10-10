@@ -1,0 +1,29 @@
+model Attendance {
+  id        String   @id @default(uuid())
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [id])
+  sectionId String
+  section   Section  @relation(fields: [sectionId], references: [id])
+  date      DateTime
+  isPresent Boolean
+}
+
+model Exam {
+  id         String   @id @default(uuid())
+  sectionId  String
+  section    Section  @relation(fields: [sectionId], references: [id])
+  name       String // e.g., "Midterm", "Final"
+  date       DateTime
+  totalMarks Float
+
+  results Result[]
+}
+
+model Result {
+  id            String  @id @default(uuid())
+  studentId     String
+  student       Student @relation(fields: [studentId], references: [id])
+  examId        String
+  exam          Exam    @relation(fields: [examId], references: [id])
+  marksObtained Float
+}
