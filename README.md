@@ -2,6 +2,9 @@
 
 A robust, scalable, and secure RESTful API built for managing university operations. This backend handles everything from student enrollment and course prerequisites to real-time Stripe payment integration for tuition fees, automated GPA calculations, and academic transcript generation.
 
+## 🗄️ Database ERD
+![Entity Relationship Diagram](./UMS-ERD.webp)
+
 ---
 
 ## 🚀 Key Features
