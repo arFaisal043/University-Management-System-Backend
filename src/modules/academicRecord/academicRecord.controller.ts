@@ -20,7 +20,7 @@ const submitResult = catchAsync(async (req: Request, res: Response) => {
 
 const getTranscript = catchAsync(async (req: Request, res: Response) => {
   const { studentId } = req.params;
-  const result = await AcademicRecordService.generateTranscript(studentId);
+  const result = await AcademicRecordService.generateTranscript(studentId as string);
   sendResponse(res, { statusCode: 200, success: true, message: 'Transcript generated successfully', data: result });
 });
 

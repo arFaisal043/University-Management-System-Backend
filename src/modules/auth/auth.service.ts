@@ -110,8 +110,8 @@ const socialLogin = async (payload: { idToken: string }) => {
   }
 
   const jwtPayload = {
-    email: user.email,
-    role: user.role,
+    email: user!.email,
+    role: user!.role,
   };
 
   const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
